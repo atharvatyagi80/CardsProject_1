@@ -1,4 +1,6 @@
 const cardsContainer = document.querySelector(".cards_container");
+const globalStore = [];
+
 const generateNewCard = (taskData) => `<div class="col-md-6 col-lg-4" id=${taskData.id}>
           
 <div class="card-header d-flex justify-content-end gap-2">
@@ -17,8 +19,19 @@ const generateNewCard = (taskData) => `<div class="col-md-6 col-lg-4" id=${taskD
 </div>
 `;
 
+const LoadInitialCardData = () => {
 
-const saveChanges = () => {
+  const getCardData = localStorage.getItem("tasky");
+
+  const {cards} = JSON.parse(getCardData);
+  cards.map((cardObject) =>
+  {cardsContainer.insertAdjacentHTML("beforeend", generateNewCard(cardObject));
+  globalStore.push(cardObject);
+})
+};
+
+
+ const saveChanges = () => {
     const taskData = {
         id: `${Date.now()}`, //This is for unique number
         imageUrl: document.getElementById("imageUrl").value,
@@ -32,4 +45,8 @@ const saveChanges = () => {
 
 
  cardsContainer.insertAdjacentHTML("beforeend", generateNewCard(taskData));
+
+ globalStore.push(taskData);
+
+ localStorage.setItem("tasky", JSON.stringify({cards:globalStore}));
 }; 
